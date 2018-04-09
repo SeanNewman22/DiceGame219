@@ -1,4 +1,6 @@
-﻿
+﻿/*
+
+//Sean's code
 var buttonBet = document.getElementById("ButtonBet");
 
 var image1 = document.getElementById("image1");
@@ -90,8 +92,12 @@ function Lose(){
         buttonBet.style.display = "block";
     }
 }
+*/
+
 
 //Patrick's code
+
+//We decided to go with Patrick's js code this week because Sean couldn't manage to get the status message to change and Patrick's code was a bit more cleaner and used ES6 in it
     let status = document.getElementById("status");
     let turnsTaken = document.getElementById("turnCount");
     turnsTaken.innerHTML = 0;
