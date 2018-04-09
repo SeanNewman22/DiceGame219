@@ -91,4 +91,53 @@ function Lose(){
     }
 }
 
+//Patrick's code
+    let status = document.getElementById("status");
+    let turnsTaken = document.getElementById("turnCount");
+    turnsTaken.innerHTML = 0;
+    let playerAccount = document.getElementById("balance");
+    playerAccount.innerHTML = 5;
+    let dice1 = document.getElementById("image1");
+    let dice2 = document.getElementById("image2");
+    let button = document.getElementById("ButtonBet");
+    button.disabled = false;
 
+function buttonClicked(){
+    
+    if (playerAccount.innerHTML > 0){
+        
+    let dice1Number = Math.floor(Math.random() * 6) + 1;
+    let dice2Number = Math.floor(Math.random() * 6) + 1;
+    
+    dice1.src = "./images/dice-"+dice1Number+".jpg";
+    dice2.src = "./images/dice-"+dice2Number+".jpg";
+
+        if (dice1Number === dice2Number){
+            playerAccount.innerHTML++;
+            status.innerHTML = "You won!  Play again to win more!";
+        }
+        
+        else if (dice1Number + dice2Number === 7){
+            playerAccount.innerHTML++;
+            status.innerHTML = "You won!  Play again to win more!";
+        }
+        
+        else if(dice1Number + dice2Number === 11){
+                 playerAccount.innerHTML++;
+                status.innerHTML = "You won!  Play again to win more!";
+                }
+        else {
+            playerAccount.innerHTML--;
+            if(playerAccount.innerHTML == 0){
+                status.innerHTML = "GAME OVER";  
+                button.style.display = "none";
+            }
+            else{
+                status.innerHTML = "You lost this round!  Try again and you might win!";
+            }
+               
+        }  
+        turnsTaken.innerHTML++;
+    }
+    
+}//end function
