@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dice Game</title>
+    <LINK REL=StyleSheet HREF="diceGameCSS.css" TYPE="text/css"></LINK>
+    </head>
+
+<body>
+    <h2> The JavaScript Dice Game</h2>
+    <p> You start with $5, each round you either win or lose $1.</p>
+    <img id="image1" src="./images/dice-1.jpg" alt="Dice Image" style="width:50px;height:50px;">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <img id="image2" src="./images/dice-6.jpg" alt="Dice Image" style="width:50px;height:50px;">
+    <br /><br />
+    <p>
+        Your balance is $<span id="balance">5</span><br />
+        Number of turns <span id="turnCount">0</span><br />
+    </p>
+    <br />
+    <p>
+        <span id="status"></span>
+    </p>
+    <button id="ButtonBet" type="button" onclick="buttonClicked()">Bet Now</button>  <br />
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+    
+    //All the variable declared are essential for the game to work, so they will need to be merged into the startup code
+    var turnsTaken = document.getElementById("turnCount");//this is needed for it to be displayed
+    turnsTaken.innerHTML = 0;
+        
+    let playerAccount = document.getElementById("balance"); //For some reason, this is needed for the whole thing to work
+    playerAccount.innerHTML = 5;
+        
+    let dice1 = document.getElementById("image1");//figure out how to make jquery work on this
+    let dice2 = document.getElementById("image2");
+        
+    let button = document.getElementById("ButtonBet");//figure out how to make jquery work on this
+    button.disabled = false;
+        
+    let playersTurn = 1;      
+        
+    //This is the constructor for the players, which must be in the startup or seperate file for this thing to work   
+    function Players(Name, playerAccount, turnsTaken, IsPlayerBroke)
+    {
+    this.name = Name;
+    this.playerAccount = playerAccount;
+    this.turnsTaken = turnsTaken;
+    this.IsPlayerBroke = IsPlayerBroke;
+    }
+        
+    let player1 = new Players("Player", 5, 0, "false");
+    var player2 = new Players("Lea iacta est", 5, 0, "false");
+    var player3 = new Players("Commodus", 5, 0, "false");        
+        
+    function buttonClicked(){  //this is the function that is triggered by the button being pressed, or the game logic
+                               //This is the game logic, which must be a seperate object, called when the user clicks the button
+                              //call it function GameLogic and have the startup js call it once it is clicked
+    
+    let RollDice = {
+    
+    dice1Number: Math.floor(Math.random() * 6) + 1,
+    
+    dice2Number: Math.floor(Math.random() * 6) + 1,
+        
+    };
+    
+    function didPlayerWin(){
+      if(RollDice.dice1Number + RollDice.dice2Number == 7){
+          return true;
+      }  
+        else if(RollDice.dice1Number + RollDice.dice2Number == 11){
+            return true;
+        }
+        else if (RollDice.dice1Number == RollDice.dice2Number){
+            return true;
+        }
+        else{
+            return false;
+        }  
+    };
+    
+    if (player1.IsPlayerBroke == true && player2.IsPlayerBroke == true){
+        $("#status").text ("The winner is: " + player3.name);
+        button.style.display = "none";
+    }
+    
+    else if(player2.IsPlayerBroke == true && player3.IsPlayerBroke == true){
+            $("#status").text ("The winner is: " + player1.name);
+        button.style.display = "none";
+            }
+            
+    else if(player3.IsPlayerBroke == true && player1.IsPlayerBroke == true){
+            $("#status").text ("The winner is: " + player2.name);
+        button.style.display = "none";
+            }
+            
+    else {        
+    
+    dice1.src = "./images/dice-"+RollDice.dice1Number+".jpg";
+    dice2.src = "./images/dice-"+RollDice.dice2Number+".jpg";
+        
+        if(playersTurn == 1){
+        
+            if(player1.IsPlayerBroke == true){
+                turnsTaken.innerHTML = player1.turnsTaken 
+                playerAccount.innerHTML = player1.playerAccount;
+                $("#status").text ("You already lost, " +player1.name+ ".  But you should stick around to see who will win!");
+                playersTurn = 2;
+            }
+            
+            else{
+
+        if (didPlayerWin() == true){
+            player1.playerAccount++;
+            playerAccount.innerHTML = player1.playerAccount;
+            $("#status").text ("You won: "+player1.name+"!  Play again to win more!");
+        }
+        
+        else {
+            $("#balance").text(parseInt($("#balance").text()) - 1);
+            player1.playerAccount--;
+            playerAccount.innerHTML = player1.playerAccount;
+            if(player1.playerAccount == 0){
+                player1.IsPlayerBroke = true;
+                $("#status").text ("GAME OVER FOR: " +player1.name+ "!");  
+            }
+            
+            else{
+                $("#status").text("You lost this round: "+ player1.name  +"!  Try again and you might win!");
+            }
+               
+        }  
+        player1.turnsTaken++;
+        turnsTaken.innerHTML = player1.turnsTaken 
+        playersTurn = 2;    
+        }//end else statement if player is not broke
+    }//end player 1 turn
+    
+        else if(playersTurn == 2){
+        
+            if(player2.IsPlayerBroke == true){
+                playerAccount.innerHTML = player2.playerAccount;
+                turnsTaken.innerHTML = player2.turnsTaken
+                $("#status").text ("You already lost, " + player2.name+".  But you should stick around to see who will win!"); 
+                playersTurn = 3;
+            }
+            
+            else{
+            
+        if (didPlayerWin() == true){
+            player2.playerAccount++;
+            playerAccount.innerHTML = player2.playerAccount;
+            $("#status").text ("You won: "+player2.name+"!  Play again to win more!");
+        }
+        
+        else {
+            player2.playerAccount--;
+            playerAccount.innerHTML = player2.playerAccount;
+            if(player2.playerAccount == 0){
+                player2.IsPlayerBroke = true;
+                $("#status").text ("GAME OVER FOR: " + player2.name+"!");  
+            }
+            
+            else{
+                $("#status").text("You lost this round: "+ player2.name  +"!  Try again and you might win!");
+            }    
+        }  
+        player2.turnsTaken++;
+        turnsTaken.innerHTML = player2.turnsTaken 
+        playersTurn = 3;
+            }//end if not broke else statement
+        }//ends player 2 turn
+        
+        else if(playersTurn == 3){
+        
+            if(player3.IsPlayerBroke == true){
+                turnsTaken.innerHTML = player3.turnsTaken
+                playerAccount.innerHTML = player3.playerAccount;
+                $("#status").text ("You already lost, " + player3.name+".  But you should stick around to see who will win!");
+                playersTurn = 1;
+            }
+            
+            else {
+            
+                if (didPlayerWin() == true){
+                    player3.playerAccount++;
+                    playerAccount.innerHTML = player3.playerAccount;
+                    $("#status").text ("You won: "+player3.name+"!  Play again to win more!");
+                }
+                
+                else {
+                
+                    player3.playerAccount--;
+                    playerAccount.innerHTML = player3.playerAccount;
+                    
+                        if(player3.playerAccount == 0){
+                            player3.IsPlayerBroke = true;
+                            $("#status").text ("GAME OVER FOR: " + player3.name+"!");  
+                        }
+                        
+            else {
+                $("#status").text("You lost this round: "+ player3.name  +"!  Try again and you might win!");
+            } 
+        }  
+        player3.turnsTaken++;
+        turnsTaken.innerHTML = player3.turnsTaken   
+        playersTurn = 1;
+      }
+  }
+}
+    
+}//end function
+    </script>
+
+</body>
+</html>
